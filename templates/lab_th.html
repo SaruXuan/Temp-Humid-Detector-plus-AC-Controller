@@ -1,0 +1,69 @@
+<html>
+	<head>	
+		<script src='https://cdn.socket.io/4.0.1/socket.io.min.js'></script>
+		<script src='static/js/jquery-3.6.0.min.js'></script>
+		<script>
+			$(document).ready(function(){
+				function get_datetext(){
+					let datetime = new Date();
+					let datetext = datetime.getFullYear() + '-' + ('0'+(datetime.getMonth()+1)).slice(-2) + '-' + ('0'+datetime.getDate()).slice(-2) + '  ' + ('0'+datetime.getHours()).slice(-2) + ':' + ('0'+datetime.getMinutes()).slice(-2) + ':' + ('0'+datetime.getSeconds()).slice(-2);
+					return datetext;
+				}
+
+				function set_clock(){
+					$('#datetime h1').text(get_datetext);
+				}
+
+				set_clock();
+				setInterval(set_clock, 1000);
+
+				var socket = io.connect('http://localhost:8080');
+				socket.on('connect', function(){
+					console.log('SocketIO connection established!!!');
+				})
+
+				socket.emit('refresh');
+				
+				$('#button').on('click', function(e){
+					e.preventDefault();
+					socket.emit('refresh');
+				})
+
+				$('#goto-history').on('click', function(e){
+					e.preventDefault();
+					window.location.replace('lab_log');
+				})
+
+				$('#goto-ac').on('click', function(e){
+					e.preventDefault();
+					window.location.replace('lab_ac');
+				})
+
+				setInterval(function(){
+					$('#button').trigger('click');
+				}, 10000);
+
+				socket.on('status', function(e){
+					console.log('receive_update');
+					//get old data
+					let old_data = $('#title h1').text();
+					$('#history-container').prepend("<div class='history' style='width: 60vw; margin: 0 auto;'><p style='float: left; display: inline-block;'>" + old_data + "</p><p style='float: right; display: inline-block;'>" + get_datetext() + "</p></div><div style='clear: both;'></div>");
+					$('#title h1').text('Temperature: '+ e['temperature'] + '*C, Humidity: ' + e['humidity'] + '%');
+				})
+			});
+		</script>
+
+		<link rel='stylesheet', href='/static/css/skeleton.css'>
+		<link rel="stylesheet" href="/static/css/normalize.css">
+		<link rel='stylesheet', href='static/css/style.css'>
+	</head>
+	<body>
+		<div id='wrap'>
+			<div id='datetime'><h1></h1></div>
+			<div id='title'><h1>Temperature: {{'%.1f' | format(temp|float)}}*C, Humidity: {{'%.1f' | format(humid|float)}}%</h1></div>
+			<div id='button-div'><button id='button'>Get latest</button><button id='goto-history'>View history</button><button id='goto-ac'>AC control</button></div>
+			<hr width='60%;'></hr>
+			<div id='history-container'></div></div>
+		</div>
+	</body>
+</html>

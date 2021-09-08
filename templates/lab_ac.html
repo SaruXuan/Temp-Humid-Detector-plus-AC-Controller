@@ -1,0 +1,49 @@
+<html>
+	<head>	
+		<script src='https://cdn.socket.io/4.0.1/socket.io.min.js'></script>
+		<script src='static/js/jquery-3.6.0.min.js'></script>
+		<script>
+			$(document).ready(function(){
+				var socket = io.connect('http://localhost:8080');
+				
+				socket.on('connect', function(e){
+					console.log('SocketIO connection is established!!');
+				})
+
+				var temperature = $('#temp-option-div option').filter(':selected').val();
+				$('#open-btn').on('click', function(e){
+					e.preventDefault();
+					socket.emit('open', {'temperature': temperature});
+				})
+
+				$('#close-btn').on('click', function(e){
+					e.preventDefault();
+					socket.emit('close');
+				})
+
+				$('#home-btn').on('click', function(e){
+					e.preventDefault();
+					window.location.replace('..');
+				})
+			});
+		</script>
+
+		<link rel='stylesheet', href='/static/css/skeleton.css'>
+		<link rel="stylesheet" href="/static/css/normalize.css">
+		<link rel='stylesheet', href='static/css/style.css'>
+	</head>
+	<body>
+		<div id='wrap'>
+			<div id='title'><h1>AC controller</h1></div>
+			<div id='button-div'><button id='open-btn'>Open</button><button id='close-btn'>Close</button><button id='home-btn'>Home</button></div>
+			<hr width='60%;'></hr>
+			<div id='temp-option-div'><p>Temperature settings:</p>
+				<select id='temp-option-list'>
+					<option value='25'>25</option>
+					<option value='26' selected>26</option>
+					<option value='27'>27</option>
+				</select>
+			</div>
+		</div>
+	</body>
+</html>

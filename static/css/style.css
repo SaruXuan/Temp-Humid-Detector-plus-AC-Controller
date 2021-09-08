@@ -1,0 +1,17 @@
+#wrap {
+  margin: auto;
+  padding-top: 10vh;
+}
+
+
+#title, #datetime {
+  text-align: center;
+}
+
+#button-div {
+  text-align: center;	
+}
+
+#temp-option-div {
+  text-align: center;
+}

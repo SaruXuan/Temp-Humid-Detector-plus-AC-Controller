@@ -1,0 +1,48 @@
+<html>
+	<head>
+		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+		<script src='https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js'></script>
+
+		<link href='https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
+
+		<script>
+			$(document).ready(function(){
+				$('#log').DataTable();
+				$('#button').on('click', function(e){
+					e.preventDefault();
+					window.location.replace('/');
+				})
+			});
+		</script>
+	</head>
+	<body>
+		<div id='container' style='width: 90vw; margin: 0 auto; padding-top: 5vh;'>
+			<table id="log" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Datetime</th>
+                <th>Temperature</th>
+                <th>Humidity</th>
+            </tr>
+        </thead>
+        <tbody>
+	    {% for row in data %}
+	    <tr>
+		<td>{{row.datetime}}</td>
+		<td>{{row.temperature}}</td>
+		<td>{{row.humidity}}</td>
+	    </tr>
+	    {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Datetime</th>
+                <th>Temperature</th>
+                <th>Humidity</th>
+            </tr>
+        </tfoot>
+    </table>
+    <div id='button-container'><button id='button'>Home</button></div>
+		</div>
+	</body>
+</html>
